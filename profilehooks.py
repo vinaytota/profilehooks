@@ -138,6 +138,11 @@ try:
 except ImportError:
     cProfile = None
 
+try:
+    from eventlet.green import profile as eventlet_profile
+except ImportError:
+    eventlet_profile = None
+
 # For timecall
 import time
 
@@ -393,6 +398,15 @@ if cProfile is not None:
         Profile = cProfile.Profile
 
     AVAILABLE_PROFILERS['cProfile'] = CProfileFuncProfile
+
+if eventlet_profile is not None:
+
+    class EventletFuncProfile(FuncProfile):
+        """Profiler for a function (uses cProfile)."""
+
+        Profile = eventlet_profile.Profile
+
+    AVAILABLE_PROFILERS['eventlet'] = EventletFuncProfile
 
 
 if hotshot is not None:
